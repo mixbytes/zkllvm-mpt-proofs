@@ -75,7 +75,7 @@ int verify_proof(bytes value, unsigned char* storage_hash, unsigned char* key_ha
     bytes decoded[MAX_STRINGS];
     int nibble_index = 0;
 
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 32; i++) {
         nibbles[i * 2] = key_hash[i] >> 4;
         nibbles[i * 2 + 1] = key_hash[i] & 0x0F;
     }
