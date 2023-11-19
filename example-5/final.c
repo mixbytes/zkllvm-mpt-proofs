@@ -167,10 +167,38 @@ void keccak_final() {
     }
     sha3_permutation();
 
-    for (uint16_t i = 0; i < digest_length; i++) {
-        uint8_t shift_amount = 8 * (i % 8);
-        keccak_hash[i] = (ctx_hash[i / 8] >> shift_amount) & 0xFF;
-    }
+    keccak_hash[0] = (ctx_hash[0] >> 0) & 0xFF;
+    keccak_hash[1] = (ctx_hash[0] >> 8) & 0xFF;
+    keccak_hash[2] = (ctx_hash[0] >> 16) & 0xFF;
+    keccak_hash[3] = (ctx_hash[0] >> 24) & 0xFF;
+    keccak_hash[4] = (ctx_hash[0] >> 32) & 0xFF;
+    keccak_hash[5] = (ctx_hash[0] >> 40) & 0xFF;
+    keccak_hash[6] = (ctx_hash[0] >> 48) & 0xFF;
+    keccak_hash[7] = (ctx_hash[0] >> 56) & 0xFF;
+    keccak_hash[8] = (ctx_hash[1] >> 0) & 0xFF;
+    keccak_hash[9] = (ctx_hash[1] >> 8) & 0xFF;
+    keccak_hash[10] = (ctx_hash[1] >> 16) & 0xFF;
+    keccak_hash[11] = (ctx_hash[1] >> 24) & 0xFF;
+    keccak_hash[12] = (ctx_hash[1] >> 32) & 0xFF;
+    keccak_hash[13] = (ctx_hash[1] >> 40) & 0xFF;
+    keccak_hash[14] = (ctx_hash[1] >> 48) & 0xFF;
+    keccak_hash[15] = (ctx_hash[1] >> 56) & 0xFF;
+    keccak_hash[16] = (ctx_hash[2] >> 0) & 0xFF;
+    keccak_hash[17] = (ctx_hash[2] >> 8) & 0xFF;
+    keccak_hash[18] = (ctx_hash[2] >> 16) & 0xFF;
+    keccak_hash[19] = (ctx_hash[2] >> 24) & 0xFF;
+    keccak_hash[20] = (ctx_hash[2] >> 32) & 0xFF;
+    keccak_hash[21] = (ctx_hash[2] >> 40) & 0xFF;
+    keccak_hash[22] = (ctx_hash[2] >> 48) & 0xFF;
+    keccak_hash[23] = (ctx_hash[2] >> 56) & 0xFF;
+    keccak_hash[24] = (ctx_hash[3] >> 0) & 0xFF;
+    keccak_hash[25] = (ctx_hash[3] >> 8) & 0xFF;
+    keccak_hash[26] = (ctx_hash[3] >> 16) & 0xFF;
+    keccak_hash[27] = (ctx_hash[3] >> 24) & 0xFF;
+    keccak_hash[28] = (ctx_hash[3] >> 32) & 0xFF;
+    keccak_hash[29] = (ctx_hash[3] >> 40) & 0xFF;
+    keccak_hash[30] = (ctx_hash[3] >> 48) & 0xFF;
+    keccak_hash[31] = (ctx_hash[3] >> 56) & 0xFF;
 }
 
 void ctx_init() {
