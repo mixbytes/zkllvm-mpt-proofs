@@ -167,10 +167,10 @@ void keccak_final() {
     }
     sha3_permutation();
 
-for (uint16_t i = 0; i < digest_length; i++) {
-    uint8_t shift_amount = 8 * (i % 8);
-    keccak_hash[i] = (ctx_hash[i / 8] >> shift_amount) & 0xFF;
-}
+    for (uint16_t i = 0; i < digest_length; i++) {
+        uint8_t shift_amount = 8 * (i % 8);
+        keccak_hash[i] = (ctx_hash[i / 8] >> shift_amount) & 0xFF;
+    }
 }
 
 void ctx_init() {
