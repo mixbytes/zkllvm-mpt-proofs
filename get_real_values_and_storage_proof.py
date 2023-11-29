@@ -75,45 +75,48 @@ def get_storage_proof(contract_address, storage_slot, block_number="latest"):
 def bytes_to_cpp_hardcode(buf):
     return '{' + ','.join("0x{:x}".format(x) for x in buf) + '}'
 
+def value_to_array_of_ints(val):
+    #returns something like " {'array': [ {'int': '0xf9'}, {'int': '0xe1}, ... ] 
+    return {'array': [{'int': hex(int(b))} for b in bytes(val)]}
+
 if __name__ == "__main__":
     proof = get_storage_proof(contract_address, storage_slot, block_number)
     
     block = w3.eth.get_block(block_number)
     state_root = block['stateRoot']
-   
+    
     print("Block {}".format(block_number))
     print("Contract: {}".format(contract_address))
     print("Slot: {}".format(storage_slot))
     value = proof.storageProof[0].value
     print("Value: {}".format(value.hex()))
-    print('{' + ','.join("0x00" for x in range(0,31)) + '}' + "\n")
     
-    print("State root: {}".format(state_root.hex()))
-    print("State root(bytes32): " + bytes_to_cpp_hardcode(state_root) + "\n")
-    
-    
-    proof_dec = rlp.decode(proof.storageProof[0].proof[0])
-    print("Proof:")
-    proof = []
-    for p in proof_dec:
-        proof.append(int.from_bytes(p, "little"))
-        print("   {}".format(int.from_bytes(p, "little"))) # [TODO] check
-        print("{}_cppui256,".format(p.hex())) # [TODO] check
-        print("{},".format(p.hex())) # [TODO] check
-        print(bytes_to_cpp_hardcode(p))
-        print(" ")
+    # part of data passed to inputs
+    print("Proof data:")
 
-    # prepare inputs for circuit
-    # stateroot: int
-    # value: int
-    # proof: array
+    print("    StorageHash: {}".format(proof.storageHash.hex()))
+    trie_key = keccak(pad_bytes(b'\x00', 32, proof.storageProof[0].key))
+    print("    TrieKey: {}".format(trie_key.hex()))
+   
+    #proof_dec = proof.storageProof[0].proof[0]
+    print("    Proof:")
+    for p in proof.storageProof[0].proof:
+        print("        {}".format(p.hex()))
+
+    proofs = []
+    for p in proof.storageProof[0].proof:
+        proofs.append(value_to_array_of_ints(p))
+
     res = [
-        { 'int': int.from_bytes(state_root, "little") },
-        { 'int': int.from_bytes(value, "little") },
-        { 'array': proof },
+        value_to_array_of_ints(proof.storageHash),
+        value_to_array_of_ints(trie_key),
+        { 'array': proofs },
     ]
     
     output_pi = "public_input.json"
     with open(output_pi, 'w') as f:
         sys.stdout = f
         print(json.dumps(res, indent=4))
+
+
+
