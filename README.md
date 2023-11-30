@@ -5,9 +5,8 @@ This is the repo for hackathon project by MixBytes team of ETHGLobal Hackathon I
 The project is based on [ZKLLVM](https://github.com/NilFoundation/zkLLVM) compiler-assigner-prover and forked from [zkllvm-template](https://github.com/NilFoundation/zkllvm-template) project.
 
 
-# Instuctions
 
-## Cloning and updateing submodules
+## Getting the code
 
 ```bash
 git clone --recurse-submodules https://github.com/mixbytes/zkllvm-mpt-proofs.git
@@ -20,13 +19,29 @@ If you initially cloned without `--recurse-submodules`, update submodules explic
 git submodule update --init --recursive
 ```
 
-Prepare Docker image containing the `=nil;` toolchain:
+
+## C++ part (for debugging)
+
+Compile and run the ```main()``` function, calling the same ```verify_path()``` function, that is used in circuit to debug
+
+```
+clang++ -std=c++14 -Wno-unknown-attributes -I libs/crypto3/libs/hash/include/ src/main.cpp src/cJSON.cpp
+```
+(result is in ```a.out```, you can run it)
+
+
+
+
+## ZKLLVM part
+
+### 0. Prepare docker images with compiler/assigner/prover/verifier
 
 ```bash
 docker pull ghcr.io/nilfoundation/toolchain:latest
 ```
 
-## 1. Compile circuit
+
+### 1. Compile circuit
 Run the script from the root of your project.
 
 ```bash
@@ -40,7 +55,7 @@ The `compile` command does the following:
 3. Compiles the code into a circuit.
 
 
-## 2. Build a circuit file and an assignment table (analog of witness generation)
+### 2. Build a circuit file and an assignment table (analog of witness generation)
 
 Next step is to make a compiled circuit and assignment table.
 
@@ -57,16 +72,11 @@ The `assigner` produces the following files:
 * Assignment table `./build/template.tbl` is a representation of input data,
   prepared for proof computation with this particular circuit.
 
-## 3. Produce and verify a proof locally
+### 3. Produce and verify a proof locally
 
 ```bash
 scripts/run.sh --docker prove
 ```
-
-
-## 4. Do something
-
-Study ZKLLVM repos for more information, and use MPT proofs for building more secure & trustless oracles. Good luck!
 
 
 # (to be continued) 
