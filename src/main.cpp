@@ -375,125 +375,6 @@ int proof_length = 6;
         cur_proof_len = proof_lengths[cur_proof_num];
     }
     return 0x77;
-
-
-
-
-
-
-    /*
-    for (int i = 0; i < proof_length; i++) {
-        ctx_init();
-        unsigned int proof_size = MPTproof[i].size();
-
-        for (int k = 0; k < proof_size; k++) {
-            keccak_msg[k] = (unsigned char)(MPTproof[i][k]);
-        }
-        
-        keccak_update(proof_lens[i]);
-        keccak_final();
-        return 3333;
-
-
-
-
-
-
-        int is_equal = 1;
-        for (int k = 0; k < 32; k++) {
-            if (storage_hash[k] != keccak_hash[k]) {
-                is_equal = 0;
-                break;
-            }
-        }
-
-        if (!is_equal) {
-           return 999;
-        }
-
-
-
-
-
-       
-        unsigned char *input_data = proofs[i];
-        unsigned int input_len = proof_lens[i];
-        unsigned int idx = 1;
-        unsigned int num_strings = 0;
-
-
-
-
-
-
-
-
-
-        if (input_data[0] > 0xc0) {
-            if (0xf7 < input_data[0]) {
-                idx += input_data[0] - 0xf7;
-            }
-
-            while (idx < input_len) {
-                if (num_strings >= MAX_STRINGS) {
-                    return 888;
-                }
-
-                if (input_data[idx] <= 0x7f) {
-                    decoded_lens[num_strings] = 1;
-                    for (int k = 0; k < 1; k++) {
-                        decoded_data[num_strings][k] = input_data[idx + k];
-                    }
-                    idx++;
-                } else if (input_data[idx] <= 0xb7) {
-                    unsigned int n = input_data[idx] - 0x80;
-                    decoded_lens[num_strings] = n;
-                    for (int k = 0; k < n; k++) {
-                        decoded_data[num_strings][k] = input_data[idx + 1 + k];
-                    }
-                    idx += 1 + n;
-                } else {
-                    return 777;
-                }
-
-                num_strings++;
-            }
-
-            if (num_strings == 0 || num_strings > MAX_STRINGS) {
-                return 222;
-            }
-
-            if (num_strings == 17) {
-                for (int k = 0; k < 32; k++) {
-                    storage_hash[k] = decoded_data[nibbles[nibble_index]][k];
-                }
-                nibble_index++;
-            } else {
-                int is_equal = 1;
-                if (value_len == decoded_lens[1]) {
-                    for (int k = 0; k < value_len; k++) {
-                        if (value_data[k] != decoded_data[1][k]) {
-                            is_equal = 0;
-                            break;
-                        }
-                    }
-                } else {
-                    is_equal = 0;
-                }
-
-                if (is_equal) {
-                    // PROOF OK
-                    return 0;
-                } else {
-                    return 444;
-                }
-            }
-        } else {
-            return 555;
-        }
-    }
-    return 666;
-    */
 }
 
 
@@ -560,7 +441,7 @@ unsigned int hexStringToUInt(const char* hexString) {
 
 
 int main() {
-    const char * json_contents = readTextFile("public_input.json");
+    const char * json_contents = readTextFile("src/main-input.json");
     cJSON *inputs_json = cJSON_Parse(json_contents);
     if (inputs_json == NULL) {
         const char *error_ptr = cJSON_GetErrorPtr();
@@ -621,7 +502,11 @@ int main() {
                     continue;
                 }
                 cJSON *num = cJSON_GetObjectItemCaseSensitive(sth, "int");
-                proof_lengths[j] = hexStringToUInt(num->valuestring);
+                if (num->valuestring != NULL)
+                    proof_lengths[j] = hexStringToUInt(num->valuestring);
+                else
+                    proof_lengths[j] = 0;
+            
                 if (sth->next == NULL)
                     break;
                 sth = sth->next;
@@ -640,7 +525,11 @@ int main() {
                     continue;
                 }
                 cJSON *num = cJSON_GetObjectItemCaseSensitive(sth, "int");
-                proof_vals[j] = hexStringToUInt(num->valuestring);
+                if (num->valuestring != NULL)
+                    proof_vals[j] = hexStringToUInt(num->valuestring);
+                else
+                    proof_vals[j] = 0;
+       
                 if (sth->next == NULL)
                     break;
                 sth = sth->next;

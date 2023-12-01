@@ -75,13 +75,32 @@ def get_storage_proof(contract_address, storage_slot, block_number="latest"):
 def bytes_to_cpp_hardcode(buf):
     return '{' + ','.join("0x{:x}".format(x) for x in buf) + '}'
 
-def byte_values_to_array_of_ints(val):
-    #returns something like " {'array': [ {'int': '0xf9'}, {'int': '0xe1}, ... ] 
-    return {'array': [{'int': hex(int(b))} for b in bytes(val)]}
+def byte_values_to_array_of_ints(val, padding_to):
+    #returns something like " {'array': [ {'int': '0xf9'}, {'int': '0xe1}, ... ]
+    arr = []
+    i = 0
+    total = len(bytes(val))
+    for b in range(0, padding_to):
+        if i < total:
+            arr.append({'int': hex(int(bytes(val)[i]))})
+        else:
+            arr.append({'int': 0})
+        i +=1
+        
+    return {'array': arr}
 
-def int_values_to_array_of_ints(val):
-    #returns something like " {'array': [ {'int': '0xf9'}, {'int': '0xe1}, ... ] 
-    return {'array': [{'int': hex(int(i))} for i in val]}
+
+def int_values_to_array_of_ints(val, padding_to):
+    arr = []
+    i = 0
+    total = len(val)
+    for v in range(0, padding_to):
+        if i < total:
+            arr.append({'int': hex(int(val[i]))})
+        else:
+            arr.append({'int': 0})
+        i += 1 
+    return {'array': arr}
 
 
 if __name__ == "__main__":
@@ -118,20 +137,20 @@ if __name__ == "__main__":
             proofvs.append(b)
         i += 1
 
-    proof_vals = byte_values_to_array_of_ints(proofvs)
-    proof_lengths = int_values_to_array_of_ints(proofls)
+    proof_vals = byte_values_to_array_of_ints(proofvs, 4096)
+    proof_lengths = int_values_to_array_of_ints(proofls, 32)
 
     res = [
-        byte_values_to_array_of_ints(proof.storageHash),
-        byte_values_to_array_of_ints(trie_key),
+        byte_values_to_array_of_ints(proof.storageHash, 32),
+        byte_values_to_array_of_ints(trie_key, 32),
         proof_lengths,
         proof_vals
     ]
     
-    output_pi = "public_input.json"
+    output_pi = "src/main-input.json"
     with open(output_pi, 'w') as f:
         sys.stdout = f
-        print(json.dumps(res, indent=4))
+        print(json.dumps(res, indent=2))
 
 
 
