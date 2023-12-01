@@ -75,9 +75,14 @@ def get_storage_proof(contract_address, storage_slot, block_number="latest"):
 def bytes_to_cpp_hardcode(buf):
     return '{' + ','.join("0x{:x}".format(x) for x in buf) + '}'
 
-def value_to_array_of_ints(val):
+def byte_values_to_array_of_ints(val):
     #returns something like " {'array': [ {'int': '0xf9'}, {'int': '0xe1}, ... ] 
     return {'array': [{'int': hex(int(b))} for b in bytes(val)]}
+
+def int_values_to_array_of_ints(val):
+    #returns something like " {'array': [ {'int': '0xf9'}, {'int': '0xe1}, ... ] 
+    return {'array': [{'int': hex(int(i))} for i in val]}
+
 
 if __name__ == "__main__":
     proof = get_storage_proof(contract_address, storage_slot, block_number)
@@ -103,14 +108,24 @@ if __name__ == "__main__":
     for p in proof.storageProof[0].proof:
         print("        {}".format(p.hex()))
 
-    proofs = []
+    proofvs = []
+    proofls = []
+    i = 0
     for p in proof.storageProof[0].proof:
-        proofs.append(value_to_array_of_ints(p))
+        proofls.append(0)
+        for b in bytes(p):
+            proofls[i] += 1
+            proofvs.append(b)
+        i += 1
+
+    proof_vals = byte_values_to_array_of_ints(proofvs)
+    proof_lengths = int_values_to_array_of_ints(proofls)
 
     res = [
-        value_to_array_of_ints(proof.storageHash),
-        value_to_array_of_ints(trie_key),
-        { 'array': proofs },
+        byte_values_to_array_of_ints(proof.storageHash),
+        byte_values_to_array_of_ints(trie_key),
+        proof_lengths,
+        proof_vals
     ]
     
     output_pi = "public_input.json"

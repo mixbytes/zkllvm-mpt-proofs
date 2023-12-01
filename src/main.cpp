@@ -1,7 +1,9 @@
 #include <nil/crypto3/hash/algorithm/hash.hpp>
 using namespace nil::crypto3;
 #include <vector>
+#include <array>
 
+#define MAX_PROOF_LEN 4096
 ///////////////////////////////////////// START OF KECCAK //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +233,7 @@ void ctx_init() {
 
 
 #define MAX_STRINGS 32
-
+/*
 unsigned char storage_hash[] = {0x7b, 0x21, 0x70, 0xeb, 0x13, 0x42, 0x08, 0x2d, 0x77, 0x52, 0xa9, 0x67, 0x0e, 0xdb, 0x1c, 0x3f, 0x18, 0xbf, 0x23, 0xb8, 0xaf, 0x1d, 0x23, 0x13, 0x6a, 0x46, 0x27, 0xfe, 0xa3, 0x40, 0xcf, 0x0f};
 unsigned char trie_key[] = {0x29, 0x0d, 0xec, 0xd9, 0x54, 0x8b, 0x62, 0xa8, 0xd6, 0x03, 0x45, 0xa9, 0x88, 0x38, 0x6f, 0xc8, 0x4b, 0xa6, 0xbc, 0x95, 0x48, 0x40, 0x08, 0xf6, 0x36, 0x2f, 0x93, 0x16, 0x0e, 0xf3, 0xe5, 0x63};
 unsigned char proof0[] = {0xf9, 0x02, 0x11, 0xa0, 0xf4, 0xc5, 0xc0, 0xc8, 0x6a, 0xed, 0x65, 0xa5, 0xeb, 0x36, 0x1f, 0x68, 0x74, 0x74, 0xb7, 0x13, 0x4d, 0xf3, 0x41, 0xbd, 0x55, 0x35, 0xda, 0x26, 0x51, 0x27, 0xf9, 0x41, 0x52, 0xb9, 0xc0, 0xf9, 0xa0, 0xb1, 0x5d, 0x7d, 0xd0, 0xb8, 0x5c, 0x22, 0x7c, 0x0e, 0x2a, 0x16, 0x57, 0x69, 0x71, 0xe2, 0xbf, 0x91, 0x50, 0xcd, 0x30, 0x5e, 0x44, 0xd7, 0xad, 0xd7, 0xac, 0x52, 0xc6, 0xf1, 0x50, 0x53, 0x05, 0xa0, 0xcc, 0xb5, 0xc6, 0xe6, 0xc6, 0xbe, 0x75, 0x42, 0xcb, 0x57, 0x68, 0xed, 0x51, 0x3e, 0xe2, 0x96, 0x88, 0xe6, 0x44, 0x8a, 0xb0, 0x47, 0x1f, 0x7b, 0xee, 0xc0, 0xe4, 0x5b, 0x15, 0x63, 0x50, 0x83, 0xa0, 0x2d, 0x75, 0x63, 0x25, 0x77, 0x9c, 0xe7, 0x15, 0xd5, 0xcf, 0xca, 0xcf, 0xd9, 0xed, 0xb9, 0x6d, 0x5d, 0xc0, 0x03, 0x6b, 0x9d, 0xb0, 0x3d, 0xd5, 0x7d, 0x4e, 0x23, 0x84, 0x5a, 0xe0, 0x71, 0xf5, 0xa0, 0x7c, 0xfd, 0x68, 0xc3, 0x26, 0xcb, 0xb2, 0xd9, 0xcc, 0xf3, 0xac, 0x07, 0x26, 0x72, 0x0c, 0x2c, 0x6e, 0x06, 0x55, 0x40, 0xf5, 0x85, 0xf2, 0xd4, 0x7c, 0x7d, 0x1b, 0xfe, 0x2f, 0x29, 0xec, 0xd5, 0xa0, 0x67, 0x6c, 0x8d, 0x44, 0x9b, 0xbf, 0x42, 0xc9, 0x28, 0xfe, 0xea, 0xef, 0xd6, 0x8d, 0xf2, 0xbc, 0x51, 0x09, 0x40, 0x1a, 0x12, 0xb8, 0xa3, 0x14, 0x6e, 0xb3, 0x76, 0x28, 0xc7, 0x13, 0x1b, 0x7a, 0xa0, 0x62, 0x12, 0xa6, 0x04, 0xab, 0x80, 0x80, 0xff, 0x63, 0x35, 0x24, 0xc4, 0x7c, 0xa1, 0x3b, 0xb8, 0x2d, 0x52, 0x38, 0x25, 0x81, 0x15, 0xf6, 0x92, 0x94, 0x74, 0xb9, 0xcd, 0x72, 0x40, 0x5f, 0x08, 0xa0, 0xbf, 0x7b, 0x2b, 0x79, 0x82, 0x54, 0xef, 0x5e, 0xe1, 0x17, 0x8a, 0xcd, 0x28, 0xb0, 0x50, 0x23, 0xf7, 0x7b, 0xed, 0xd9, 0x79, 0xa0, 0x77, 0x3e, 0x31, 0x25, 0x46, 0x04, 0x8e, 0x77, 0x5d, 0xfb, 0xa0, 0x6e, 0x2a, 0x64, 0x4c, 0xc7, 0x7b, 0xd5, 0x46, 0xcd, 0x87, 0x8d, 0x20, 0xf6, 0x52, 0x89, 0x33, 0xe8, 0xd9, 0xc6, 0xed, 0xf9, 0x94, 0x4d, 0x29, 0x6d, 0x18, 0x1e, 0x56, 0xc0, 0x01, 0x32, 0x85, 0xa0, 0xdc, 0x31, 0xd8, 0x9e, 0xb4, 0x0c, 0x00, 0x4b, 0x2a, 0x1f, 0xd0, 0x70, 0x46, 0x99, 0xdb, 0x24, 0xf0, 0x86, 0x0c, 0x29, 0x55, 0xb8, 0x66, 0xbb, 0x54, 0x9e, 0x6c, 0x20, 0xdd, 0x23, 0xb5, 0x03, 0xa0, 0x39, 0xee, 0xfb, 0x67, 0x8f, 0xb3, 0xb7, 0x01, 0xb3, 0x6e, 0x11, 0x64, 0xc8, 0xa4, 0x1d, 0x2c, 0xe2, 0xb2, 0x55, 0xe3, 0xca, 0x72, 0xfa, 0x61, 0xf8, 0xa3, 0x33, 0xfa, 0xaf, 0x6e, 0xcb, 0x79, 0xa0, 0x46, 0x90, 0x27, 0x24, 0x14, 0xba, 0xf9, 0x06, 0x82, 0x7c, 0x27, 0x76, 0xb3, 0x10, 0x31, 0x77, 0x91, 0xc7, 0xad, 0x60, 0xd8, 0x5e, 0xda, 0xc8, 0x2e, 0x35, 0xc0, 0xfe, 0x75, 0x73, 0xae, 0x1e, 0xa0, 0xed, 0xef, 0x95, 0x06, 0x72, 0x58, 0xd1, 0x70, 0x64, 0xa9, 0xa0, 0xda, 0xcc, 0xc2, 0x1e, 0x17, 0xfa, 0x61, 0x9c, 0xbb, 0x9d, 0x7b, 0x3b, 0xa6, 0xb7, 0xc0, 0x95, 0x58, 0xfd, 0x62, 0x35, 0x35, 0xa0, 0x6b, 0xf6, 0x18, 0x70, 0xe5, 0x08, 0x0b, 0xc2, 0xa2, 0x76, 0x3c, 0x39, 0x34, 0x11, 0x9b, 0x39, 0xc5, 0x8b, 0x5d, 0xcb, 0x53, 0x25, 0x22, 0x32, 0x6c, 0x4c, 0xfe, 0x9b, 0x34, 0x01, 0x96, 0x56, 0xa0, 0xa6, 0xfb, 0x36, 0xe4, 0xec, 0x57, 0x56, 0x15, 0x0c, 0x41, 0xa3, 0xbf, 0x69, 0x55, 0x00, 0x3a, 0xa4, 0xdb, 0x46, 0xd9, 0x73, 0x38, 0x95, 0x08, 0x47, 0x54, 0x29, 0x92, 0x14, 0x1c, 0x78, 0xce, 0xa0, 0xf1, 0x57, 0x13, 0xc1, 0xac, 0x1d, 0x53, 0x3f, 0x18, 0x8e, 0xe9, 0xf5, 0xc2, 0x7f, 0x48, 0x9e, 0x16, 0x76, 0x7e, 0x47, 0x05, 0x94, 0x2f, 0xd0, 0xe8, 0xc0, 0xba, 0x67, 0x82, 0xb0, 0xf2, 0x8b, 0x80};
@@ -243,38 +245,160 @@ unsigned char proof5[] = {0xe0, 0x9e, 0x3c, 0xd9, 0x54, 0x8b, 0x62, 0xa8, 0xd6, 
 
 unsigned int proof_lens[] = {532, 532, 532, 532, 115, 33};
 unsigned char *proofs[] = {proof0, proof1, proof2, proof3, proof4, proof5};
-unsigned char value_data[] = {0x01};
-unsigned int value_len = 1;
 int proof_length = 6;
-
-unsigned char nibbles[64];
-unsigned char decoded_data[MAX_STRINGS][64]; // Assuming a max length for each string
-unsigned int decoded_lens[MAX_STRINGS];
-
+*/
 
 [[circuit]] unsigned int validate_path(  
-    std::array<unsigned int, 32> sthash,
+    std::array<unsigned int, 32> sthash, 
     std::array<unsigned int, 32> triekey,
-    std::vector<std::vector<int>> MPTproof
+    std::array<unsigned int, 32> proof_lengths,
+    std::array<unsigned int, MAX_PROOF_LEN> proof_vals
 ) { 
-  
+
+
+    unsigned int value_len = 1;
+    unsigned char value_data[] = {0x01};
+
     int nibble_index = 0;
+    unsigned char nibbles[64];
+    unsigned char storage_hash[32];
 
     for (int i = 0; i < 32; i++) {
-        nibbles[i * 2] = trie_key[i] >> 4;
-        nibbles[i * 2 + 1] = trie_key[i] & 0x0F;
+        nibbles[i * 2] = (unsigned char)triekey[i] >> 4;
+        nibbles[i * 2 + 1] = (unsigned char)triekey[i] & 0x0F;
+        storage_hash[i] = (unsigned char)sthash[i];
     }
+    
+    
+    unsigned int cur_proof_num = 0;
+    unsigned int cur_proof_len = proof_lengths[cur_proof_num];
+    unsigned int cur_proof_pos = 0;
 
+    unsigned int decoded_lens[MAX_STRINGS];
+    unsigned char decoded_data[MAX_STRINGS][64]; // Assuming a max length for each string
+
+    while(cur_proof_len != 0) {
+        
+        ctx_init();
+        for (int k = 0; k < cur_proof_len; k++) {
+            keccak_msg[k] = (unsigned char)(proof_vals[cur_proof_pos + k]);
+        }
+        keccak_update(cur_proof_len);
+        keccak_final();
+        
+        int is_equal = 1;
+        for (int k = 0; k < 32; k++) {
+            if (storage_hash[k] != keccak_hash[k]) {
+                is_equal = 0;
+                break;
+            }
+        }
+        
+        if (!is_equal) {
+           return 0x11;
+        }
+
+
+ 
+
+        unsigned int input_len = proof_lengths[cur_proof_num];
+        unsigned char input_data[input_len];
+        for (int i=0; i< input_len; i++) {
+            input_data[i] = (unsigned char)proof_vals[cur_proof_pos + i];
+        }
+
+        unsigned int idx = 1;
+        unsigned int num_strings = 0;
+
+
+        if (input_data[0] > 0xc0) {
+            if (0xf7 < input_data[0]) {
+                idx += input_data[0] - 0xf7;
+            }
+            while (idx < input_len) {
+                if (num_strings >= MAX_STRINGS) {
+                    return 0x22;
+                }
+                if (input_data[idx] <= 0x7f) {
+                    decoded_lens[num_strings] = 1;
+                    decoded_data[num_strings][0] = input_data[idx];
+                    idx++;
+                } else if (input_data[idx] <= 0xb7) {
+                    unsigned int n = input_data[idx] - 0x80;
+                    decoded_lens[num_strings] = n;
+                    for (int k = 0; k < n; k++) {
+                        decoded_data[num_strings][k] = input_data[idx + 1 + k];
+                    }
+                    idx += 1 + n;
+                } else {
+                    return 0x33;
+                }
+
+                num_strings++;
+            }
+
+            if (num_strings == 0 || num_strings > MAX_STRINGS) {
+                return 0x44;
+            }
+
+            if (num_strings == 17) {
+                for (int k = 0; k < 32; k++) {
+                    storage_hash[k] = decoded_data[nibbles[nibble_index]][k];
+                }
+                nibble_index++;
+            } else {
+                int is_equal = 1;
+                if (value_len == decoded_lens[1]) {
+                    for (int k = 0; k < value_len; k++) {
+                        if (value_data[k] != decoded_data[1][k]) {
+                            is_equal = 0;
+                            break;
+                        }
+                    }
+                } else {
+                    is_equal = 0;
+                }
+
+                if (is_equal) {
+                    // PROOF OK
+                    return 0;
+                } else {
+                    return 0x55;
+                }
+            }
+        } else {
+            return 0x66;
+        }
+
+        cur_proof_pos += cur_proof_len;
+        cur_proof_num++;
+        cur_proof_len = proof_lengths[cur_proof_num];
+    }
+    return 0x77;
+
+
+
+
+
+
+    /*
     for (int i = 0; i < proof_length; i++) {
         ctx_init();
-        
-        for (int k = 0; k < proof_lens[i]; k++) {
-            keccak_msg[k] = proofs[i][k];
+        unsigned int proof_size = MPTproof[i].size();
+
+        for (int k = 0; k < proof_size; k++) {
+            keccak_msg[k] = (unsigned char)(MPTproof[i][k]);
         }
         
         keccak_update(proof_lens[i]);
         keccak_final();
-        
+        return 3333;
+
+
+
+
+
+
         int is_equal = 1;
         for (int k = 0; k < 32; k++) {
             if (storage_hash[k] != keccak_hash[k]) {
@@ -287,11 +411,23 @@ unsigned int decoded_lens[MAX_STRINGS];
            return 999;
         }
 
+
+
+
+
        
         unsigned char *input_data = proofs[i];
         unsigned int input_len = proof_lens[i];
         unsigned int idx = 1;
         unsigned int num_strings = 0;
+
+
+
+
+
+
+
+
 
         if (input_data[0] > 0xc0) {
             if (0xf7 < input_data[0]) {
@@ -357,7 +493,9 @@ unsigned int decoded_lens[MAX_STRINGS];
         }
     }
     return 666;
+    */
 }
+
 
 
 #ifndef __ZKLLVM__
@@ -435,9 +573,10 @@ int main() {
 
     int i = 0;
     cJSON * arr;
-    std::array<unsigned int, 32> sthash;
-    std::array<unsigned int, 32> triekey;
-    std::vector<std::vector<int>> MPTproof {};
+    std::array<unsigned int, 32> sthash {};
+    std::array<unsigned int, 32> triekey {};
+    std::array<unsigned int, 32> proof_lengths {};
+    std::array<unsigned int, MAX_PROOF_LEN> proof_vals {};
 
     cJSON_ArrayForEach(arr, inputs_json)
     {
@@ -472,6 +611,48 @@ int main() {
             continue;
         } // end of i==0, first array in JSON, storageHash
 
+        // third array, proofs_lengths
+        if (i == 2) {
+            cJSON *sth = arr->child;
+            sth = sth->child;
+            for (int j=0; j< 32; j++) {
+                if (sth == NULL) { // pad array to length 32 with zeroes
+                    proof_lengths[j] = 0;
+                    continue;
+                }
+                cJSON *num = cJSON_GetObjectItemCaseSensitive(sth, "int");
+                proof_lengths[j] = hexStringToUInt(num->valuestring);
+                if (sth->next == NULL)
+                    break;
+                sth = sth->next;
+            }
+            i++;
+            continue;
+        } // end of i==2, first array in JSON, storageHash
+
+        // fourth array, proofs_vals
+        if (i == 3) {
+            cJSON *sth = arr->child;
+            sth = sth->child;
+            for (int j=0; j< MAX_PROOF_LEN; j++) {
+                if (sth == NULL) { // pad array to length 32 with zeroes
+                    proof_vals[j] = 0;
+                    continue;
+                }
+                cJSON *num = cJSON_GetObjectItemCaseSensitive(sth, "int");
+                proof_vals[j] = hexStringToUInt(num->valuestring);
+                if (sth->next == NULL)
+                    break;
+                sth = sth->next;
+            }
+            i++;
+            continue;
+        } // end of i==2, first array in JSON, storageHash
+
+
+
+
+/*
         // third array of arrays, proof
         int pind = 0;
         if (i == 2) {
@@ -493,6 +674,9 @@ int main() {
             i++;
             continue;
         } // end of i==0, first array in JSON, storageHash
+
+*/
+
         break;
 
     }
@@ -501,8 +685,8 @@ int main() {
     // standart env (witn main() function) and in ZKLLVM env (passing JSON inputs
     // to validate_path() function in ZKLLVM assigner
 
-    unsigned int res = validate_path(sthash, triekey, MPTproof);
-    printf("Main result: %d\n", res);
+    unsigned int res = validate_path(sthash, triekey, proof_lengths, proof_vals);
+    printf("Main result: %02x\n", res);
     return res;
 }
 #endif
